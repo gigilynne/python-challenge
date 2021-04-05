@@ -20,13 +20,22 @@ with open(budget_data_csv) as csv_file:
  #need to interpret the details in the csv for analysis
  data = []
  for row in csv_reader
- date = datetime.strptime(row[0], '%m/%YYYY')
+ date = datetime.strptime(row[0], '%B/%Y')
  Profit/Losses = int(row[1])
 
-
-# Write a function that returns the arithmetic sum for a list of numbers
+# Write a function that returns the sum for a list of numbers
     sum = sum(Profit/Losses)
-    print(f'Total Months:' sum)
+    print(f"Total Months: " sum)
+
+# Write a function that returns the average for a list of numbers
+def average(Profit/Losses):
+    total = 0
+    for number in Profit/Losses:
+        total += number
+    return total / len (Profit/Losses)
+    print(f"Total: " average)
+
+# Write a function that hh 
 
 
 
@@ -45,10 +54,10 @@ with open(output_path,"analysis.txt", 'w',):
     f.write("------------------------------")
 
     # Write the first data row - pass the sum of the total of the total months into the written file
-    f.write("Total Months:", "x"])
+    f.write("Total Months:", sum])
 
     # Write the second row - pass the net total amount of the "Profit/Losses" over the entire period into the written file
-    f.write("Total:", "x")
+    f.write("Total:", average)
 
     # Write the third row - pass the changes in Profits over the entire period into the written file
     f.write("Average Change:", "x")
