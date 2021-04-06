@@ -4,15 +4,16 @@
 #import modules
 import os
 import csv
-from datetime import datetime
 
 #set a path for the csv file using the join for both windows and mac os
 budget_data_csv = os.path.join('Resources', 'budget_data.csv')
 
-#open and then read the csv - attemped to only open as csv, but will move to open directly into reading as a dictionary file
+#set all variables to zero before opening the files so they are ready to go as the code begins
 months = 0
 profits = 0
 
+
+#open and then read the csv - attemped to only open as csv, but will move to open directly into reading as a dictionary file
 with open(budget_data_csv) as csv_file:
     csv_reader = csv.reader(csv_file, delimiter=",")
 
@@ -20,30 +21,21 @@ with open(budget_data_csv) as csv_file:
     csv_header = next(csv_file)
     print(f"Header: {csv_header}")
 
- #need to interpret the details in the csv for analysis and return the totals for months, and profits
+#need to interpret the details in the csv for analysis and return the totals for months, total profits, change in profits by accreting each through a for loop
 
     for row in csv_reader:
         months += 1
         profits += int(row[1])
-
+        
     #Print the details in the format needed
     print(months)
     print(profits)
+    print(profits/months)
 
-#Calculate the changes in "Profit/Losses" over the entire period, then find the average of those changes
+#Return the highest number in (row[1]) and zip to (row[0]) 
 
-#Determine the greatest increase in profits (date and amount) over the entire period
 
-#The greatest decrease in losses (date and amount) over the entire period
-
-# Write a function that returns the average for a list of numbers
-def average(Profit_Losses):
-    total = 0
-    for number in Profit_Losses:
-        total += number
-    return total / len (Profit_Losses)
-   # print(f"Total: " average)
-
+#Return the lowest number in (row[1]) and zip to (row[0]) 
 
 # # Specify the file to write to
 # output_path = os.path.join(Analysis", "analysis.txt")
@@ -57,13 +49,13 @@ def average(Profit_Losses):
 #     f.write("------------------------------")
 
 #     # Write the first data row - pass the sum of the total of the total months into the written file
-#     f.write("Total Months:", sum])
+#     f.write("Total Months:", months)
 
 #     # Write the second row - pass the net total amount of the "Profit/Losses" over the entire period into the written file
-#     f.write("Total:", average)
+#     f.write("Total: $", profits)
 
 #     # Write the third row - pass the changes in Profits over the entire period into the written file
-#     f.write("Average Change:", "x")
+#     f.write("Average Change: $", profits/months)
 
 #     # Write the fourth row - pass the net total amount of the Greatest Increase in Profits over the entire period into the written file
 #     f.write("Greatest Increase in Profits:", "x", "x")
