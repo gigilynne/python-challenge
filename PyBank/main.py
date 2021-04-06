@@ -20,19 +20,21 @@ with open(budget_data_csv) as csv_file:
     csv_header = next(csv_file)
     print(f"Header: {csv_header}")
 
- #need to interpret the details in the csv for analysis
+ #need to interpret the details in the csv for analysis and return the totals for months, and profits
 
     for row in csv_reader:
         months += 1
         profits += int(row[1])
-    #Profit_Losses = int(row[1])
+
+    #Print the details in the format needed
     print(months)
     print(profits)
-#write a function that returns the total number of months
 
-# Write a function that returns the sum for a list of numbers
-#sum = sum(Profit_Losses)
-#print(f"Total Months: " sum)
+#Calculate the changes in "Profit/Losses" over the entire period, then find the average of those changes
+
+#Determine the greatest increase in profits (date and amount) over the entire period
+
+#The greatest decrease in losses (date and amount) over the entire period
 
 # Write a function that returns the average for a list of numbers
 def average(Profit_Losses):
@@ -41,12 +43,6 @@ def average(Profit_Losses):
         total += number
     return total / len (Profit_Losses)
    # print(f"Total: " average)
-
-# Write a function that calculates the 
-
-
-
-
 
 
 # # Specify the file to write to
