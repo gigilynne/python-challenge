@@ -27,7 +27,7 @@ with open(budget_data_csv) as csv_file:
     previous = first_row[1]
 
 
-#need to interpret the details in the csv for analysis and return the totals for months, total profits, change in profits by accreting each through a for loop
+#need to interpret the details in the csv for analysis and return the totals for months, total profits, and change in profits by accreting each through a for loop
     for row in csv_reader:
         months += 1
         profits += int(row[1])
@@ -46,11 +46,11 @@ with open(budget_data_csv) as csv_file:
 
 #Return the highest number in (row[1]) and zip to (row[0]) 
     #for x in range (row[1])
-    increase = max(row[1])
+    increase = max(net_change_list)
     print(increase)
 
 #Return the lowest number in (row[1]) and zip to (row[0]) 
-    decrease = min(row[1])
+    decrease = min(net_change_list)
     print(decrease)
 
 # Specify the file to write to
