@@ -1,82 +1,82 @@
-#main.py
-## PyBank
 
-#import modules
-import os
+#  import packages to read/write CSV files, create a dynamic path to the file and mean calculation 
 import csv
+import os
+import statistics as st #to calculate average
 
-#set a path for the csv file using the join for both windows and mac os
-budget_data_csv = os.path.join('Resources', 'budget_data.csv')
+# define function to calculate average of the list 
+def Average(list):
 
-#set all variables to zero before opening the files so they are ready to go as the code begins
-months = 0
-profits = 0
-net_change_list = []
+    #  round the number to 2 decimal points and return value 
+    return round(st.mean(list), 2) 
 
 #open and then read the csv - attemped to only open as csv, but will move to open directly into reading as a dictionary file
-with open(budget_data_csv) as csv_file:
-    csv_reader = csv.reader(csv_file, delimiter=",")
+inputfile = os.path.join("Resources", "budget_data.csv")
+outputfile = os.path.join("Analysis", "analysis.txt")
 
-    #read the header row because they exist
-    csv_header = next(csv_file)
-    print(f"Header: {csv_header}")
+#  create empty lists for storing values and calculations from data 
+Dates = []
+profit_loss = []
+pl_change = []
 
-    #skip the first row since there is no change that month
-    first_row = next(csv_reader)
+#  read the CSV file and store values of each column into lists 
+with open(inputfile, 'r') as budgetdata:
+    reader = csv.reader(budgetdata, delimiter=",")
+    
+    #  store header rows into a Headers list 
+    Headers = next(reader)
 
-    previous = first_row[1]
+    #  for loop to go through each row in the CSV file and append values from date column to the 'Dates' list and Profits/Losses column to the 'profit_loss' list 
+    for row in reader:
+        Dates.append(row[0])
+        profit_loss.append(int(row[1]))
+
+#  for loop to go through each value in Profits/Losses list and calculate total 
+totalprofit_loss = 0
+for i in profit_loss:
+    totalprofit_loss = i + totalprofit_loss
+
+#  use list comprehension to create a new list with difference values of each successive row (next row - current row) 
+pl_change = [profit_loss[i+1] - profit_loss[i] for i in range(0,len(profit_loss)-1)]
+
+#  calculate average change by calling the function and store in variable 
+AverageChange = Average(pl_change)
+
+#  insert a value of zero at index 0 of the pl_change list as there is no previous data to subtract for the first month (thus also making the list equal in length to Dates and profit_loss lists for index finding later) 
+pl_change.insert(0,0)
+
+#  initialize greatest increase/decrease variables to 0 
+g_increase = 0
+g_decrease = 0
+
+#  for loop to calculate greatest increase and decrease in profits and losses 
+for i in range(len(pl_change)-1):
+    if pl_change[i] < g_decrease:
+        g_decrease = pl_change[i]
+
+    if pl_change[i] > g_increase:
+        g_increase = pl_change[i]   
 
 
-#need to interpret the details in the csv for analysis and return the totals for months, total profits, and change in profits by accreting each through a for loop
-    for row in csv_reader:
-        months += 1
-        profits += int(row[1])
+#  find the index for the greatest increase and decrease in profits and losses 
+GIindex = pl_change.index(g_increase)
+GDindex = pl_change.index(g_decrease)
 
-        net_change = int(row[1]) - previous
+#  find the corresponding date of the greatest increase and decrease amounts using GI/GD indexes found above 
+GIdate = Dates[GIindex]
+GDdate = Dates[GDindex]
+    
+# create a text file and then read the output
+with open(outputfile, 'w') as textfile:
+    textfile.write(f"Financial Analysis\n"
+                   f"---------------------------\n"
+                  f"Total Months: {len(Dates)}\n"
+                  f"Total: ${totalprofit_loss}\n"
+                  f"Average Change: ${AverageChange}\n"
+                  f"Greatest Increase in Profits: {GIdate} (${g_increase})\n"
+                  f"Greatest Decrease in Profits: {GDdate} (${g_decrease})\n"
+)
 
-        previous = int(row[1])
-
-        net_change_list += [net_change]
-
-        
-    #Print the details in the format needed
-    print(months)
-    print(profits) 
-    print(round(profits/months, 2))
-
-#Return the highest number in (row[1]) and zip to (row[0]) 
-    #for x in range (row[1])
-    increase = max(net_change_list)
-    print(increase)
-
-#Return the lowest number in (row[1]) and zip to (row[0]) 
-    decrease = min(net_change_list)
-    print(decrease)
-
-# Specify the file to write to
-output_path = os.path.join('Analysis', "analysis.txt")
-
-# Open the file using "write" mode. Specify the variable to hold the contents and open the file to write
-with open(output_path, 'w'):
-    f = open(analysis.txt)
-
-    #Set the Header row for the table analysis
-    f.analysis.write("Financial Analysis")
-    f.analysis.write("------------------------------")
-
-    # Write the first data row - pass the sum of the total of the total months into the written file
-    f.analysis.write("Total Months:", months)
-
-    # # Write the second row - pass the net total amount of the "Profit/Losses" over the entire period into the written file
-    # f.write("Total: $", profits)
-
-    # # Write the third row - pass the changes in Profits over the entire period into the written file
-    # f.write("Average Change: $", profits/months)
-
-    # # Write the fourth row - pass the net total amount of the Greatest Increase in Profits over the entire period into the written file
-    # f.write("Greatest Increase in Profits:", increase)
-
-    # # Write the fifth row - pass the net total amount of the Greatest Decrease in Profits over the entire period into the written file
-    # f.write("Greatest Decrease in Profits:", decrease)
-    # f.close()
-
+with open (outputfile, 'r') as analysis:
+    contents = analysis.read()
+    print(contents)

@@ -1,41 +1,85 @@
-#main1.py
-
-## PyPoll
-
-#import modules
-import os
+# import packages to read/write CSV files and create dynamic paths to the I/O files
 import csv
+import os
 
-#set a path for the csv file using the join for both windows and mac os
-budget_data_csv = os.path.join('Resources', 'election_data.csv')
+# -- define function to fix percentage format to 3 decimal points
+def fixPercent(num):
+    num = "{:.3%}".format(num)
+    return num
 
-#open and then read the csv - attemped to only open as csv, but will move to open directly into reading as a dictionary file
-with open(budget_data_csv) as csv_file:
-   csv_reader = csv.reader(csv_file, delimiter=",")
+# define relative path for the input and output files
+inputfile = os.path.join("Resources", "election_data.csv")
+outputfile = os.path.join("Analysis", "analysis.txt")
 
-   #read the header row because they exist
-   csv_header = next(csv_file)
-   print(f"Header: {csv_header}")
- 
-  #create a dictionary for the csv, with the voter ID as the key 
-  
-  #calucluate the total number of votes cast
+# create empty lists and variables for storing values and calculations from data
+UniqueCandidates = []
+VoteCounts = []
+VotePercent = []
+TotalVotes = 0
+WinnerCount = 0
 
-  #use the dictionary to create a list of candidates who received votes
+# read the CSV file
+with open(inputfile, 'r') as electiondata:
+    reader = csv.reader(electiondata, delimiter=",")
 
-  #use the created list and the calculated total of votes to determine the percentage of votes each candidate won
+    # store header rows into a Headers list
+    Headers = next(reader)
 
-  #use the dictionary to return the total number of votes each candidate won
+    # for loop to go through each row in the CSV file and count the total number of votes
 
-  #use the value from the list created above to determine the winner of the election based on popular vote
+    for row in reader:
+        TotalVotes += 1
+    
+        # get unique candidate names and individual vote counts and store in lists
+        # if row[2] (candidate name) is not in the UniqueCandidates list, i.e. if it is the first instance of the name
+        if row[2] not in UniqueCandidates:
 
-  #use f-strings to print the values in the required format
+            #append the name to UniqueCandidates and a value of 1 to VoteCounts list
+            UniqueCandidates.append(row[2])
+            VoteCounts.append(1)
 
-# Specify the file to write to
-output_path = os.path.join('Analysis', "analysis.txt")
+        # if row[2] (candidate name) is in the UniqueCandidates list
+        else:
 
-# Open the file using "write" mode. Specify the variable to hold the contents and open the file to write
-with open(output_path, 'w'):
-    f = open(analysis.txt)
+            # get the index of the candidate from the UniqueCandidates list in order to increase the vote count by 1
+            CandidateIndex = UniqueCandidates.index(row[2])
+            VoteCounts[CandidateIndex] += 1
+        
 
-#write out the analysis in the required format for review in the .txt file
+# calculate percentage of votes for each candidate
+for i in range(len(VoteCounts)):
+    VotePercent.append(VoteCounts[i] / TotalVotes)
+
+# calculate the winner based on most votes
+for i in range(len(VoteCounts)):
+
+    # if the number of votes is greater than WinnerCount (initially zero)
+    if VoteCounts[i] > WinnerCount:
+        
+        #update WinnerCount to the number of votes at index i
+        WinnerCount = VoteCounts[i]
+
+        #update Winner to the candidate name at index i
+        Winner = UniqueCandidates[i]
+
+# create a text file with the analysis output
+with open(outputfile, 'w') as textfile:
+    textfile.write(f"Election Results\n"
+                   f"----------------------------\n"
+                   f"Total Votes: {TotalVotes}\n"
+                   f"----------------------------\n"
+                   )
+
+    # for loop to iteratively write each candidate's info
+    for i in range(len(UniqueCandidates)):
+        textfile.write(f"{UniqueCandidates[i]}: {fixPercent(VotePercent[i])} ({VoteCounts[i]})\n")
+
+    textfile.write(f"----------------------------\n"
+                   f"Winner: {Winner}\n"
+                   f"----------------------------\n"
+                  )
+
+# create a text file and then read the output
+with open (outputfile, 'r') as analysis:
+    contents = analysis.read()
+    print(contents)
